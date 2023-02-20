@@ -12,7 +12,7 @@ import { GetServerSidePropsContext } from "next";
 import UIPagination from "../../components/commons/ui/Pagination";
 import { DBIngredient } from "../../types/ingredients";
 
-const PER_PAGE = 20;
+const PER_PAGE = 10;
 
 type PropsTypes = {
   ingredients: {
@@ -57,6 +57,7 @@ const views: Map<
 const Ingredients = (props: PropsTypes) => {
   const router = useRouter();
   const { ingredients: SSRData } = props;
+
   const { data, mutate, isLoading, isError } = useIngredients({
     data: SSRData.data,
     paginate: {
@@ -72,15 +73,19 @@ const Ingredients = (props: PropsTypes) => {
   const DisplayIngredients = activeView?.component;
 
   const deleteIngredient = async (id: string) => {
-    const req = await fetch(`/api/ingredients`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
-    if (req.ok) {
-      mutate();
+    try {
+      const req = await fetch(`/api/ingredients`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+      if (req.ok) {
+        mutate();
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -94,9 +99,6 @@ const Ingredients = (props: PropsTypes) => {
       query: { filter: criteria, page: 0, limit: PER_PAGE },
     });
   };
-  if (isError) {
-    return <div>Error...</div>;
-  }
   return (
     <DashBoardLayout title="Ingredients list">
       <div className="mb-4 flex items-center">
@@ -120,6 +122,7 @@ const Ingredients = (props: PropsTypes) => {
           })}
         </div>
       </div>
+      {isError && <div>Error...</div>}
       {isLoading ? (
         <div>Loading...</div>
       ) : DisplayIngredients ? (
@@ -145,9 +148,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   try {
     const res = await fetch(
-      `http://localhost:3001/ingredients?page=${
+      `http://localhost:3001/ingredients?skip=${
         page ? page : 0
-      }&limit=${PER_PAGE}` + (filter ? `&filter=${filter}` : "")
+      }&take=${PER_PAGE}` + (filter ? `&filter=${filter}` : "")
     );
     ingredients = await res.json();
   } catch (error) {

@@ -22,12 +22,7 @@ const useIngredients = (params: Params) => {
     ? `/api/ingredients?page=${page || 0}&limit=${limit}&filter=${filter}`
     : `/api/ingredients?page=${page || 0}&limit=${limit}`;
 
-  const { data, error, mutate } = useSWR(endpoint, fetcher, {
-    fallbackData: {
-      data: SSRData,
-      totalPage: total || 1,
-    },
-  });
+  const { data, error, mutate } = useSWR(endpoint, fetcher);
 
   const ingredients = data?.data;
 
