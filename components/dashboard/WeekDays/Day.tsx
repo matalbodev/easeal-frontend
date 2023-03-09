@@ -1,7 +1,6 @@
 import useSidePanel from "../../../hooks/useSidePanel";
 import UIButton from "../../commons/ui/Button";
 import MealsList from "../Meals/List";
-import useSWR from "swr";
 import { Meal } from "../../../types/meals";
 type Day = {
   dayName: string;
@@ -36,10 +35,7 @@ const Day = (props: PropsTypes) => {
         <UIButton
           action={() =>
             showSidePanel(
-              MealsList,
-              {
-                data: props.meals,
-              },
+              <MealsList data={[]} />,
               `Choose a meal to add to ${day.dayName} ${day.dayFormatted}`
             )
           }
