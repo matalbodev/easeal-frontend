@@ -3,16 +3,28 @@ import DashBoardLayout from "../../components/dashboard/Layout";
 import MealsList from "../../components/dashboard/Meals/List";
 import { Meal } from "../../types/meals";
 import fakeMeals from "../../mock-api/meals-api";
+import UIButton from "../../components/commons/ui/Button";
+import useSidePanel from "../../hooks/useSidePanel";
 
 type PropsTypes = {
   meals: Meal[];
 };
 
-const Meals = (props: PropsTypes) => {
-  const { meals } = props;
+const Meals: React.FC<PropsTypes> = ({ meals }) => {
+  const { showSidePanel } = useSidePanel();
+
+  console.log(showSidePanel);
+  const actions = [
+    <UIButton
+      color="success"
+      action={() => showSidePanel(<div>Test</div>, "add a meal")}
+    >
+      Add meal
+    </UIButton>,
+  ];
   return (
-    <DashBoardLayout title="Your meals">
-      <MealsList data={meals} />
+    <DashBoardLayout title="Your meals" actions={actions}>
+      <MealsList data={[]} />
     </DashBoardLayout>
   );
 };
