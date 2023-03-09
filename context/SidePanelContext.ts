@@ -1,25 +1,27 @@
-import { createContext } from "react"
+import { createContext } from "react";
 
-export interface SidePanelContextState {
-	isOpen: boolean
-	title: string
-	content: React.FunctionComponent<any> | null
-	props: {}
+export interface SidePanelContextStateType {
+  isOpen: boolean;
+  title: string;
+  content: React.ReactNode;
+  props: {};
 }
 
 const SidePanelContext = createContext<{
-	state: SidePanelContextState
-	showSidePanel: (content: React.FunctionComponent<any>, props: {}, title:string) => void
-	hideSidePanel: () => void
+  state: SidePanelContextStateType;
+  showSidePanel: (content: React.ReactNode, title: string) => void;
+  hideSidePanel: () => void;
+  transitioning: boolean;
 }>({
-	state: {
-		isOpen: false,
-		title: "",
-		content: null,
-		props: {},
-	},
-	showSidePanel: () => {},
-	hideSidePanel: () => {},
-})
+  state: {
+    isOpen: false,
+    title: "",
+    content: null,
+    props: {},
+  },
+  transitioning: false,
+  showSidePanel: () => {},
+  hideSidePanel: () => {},
+});
 
-export default SidePanelContext
+export default SidePanelContext;
