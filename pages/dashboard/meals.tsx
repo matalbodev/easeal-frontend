@@ -1,19 +1,17 @@
 import { GetServerSidePropsContext } from "next";
 import DashBoardLayout from "../../components/dashboard/Layout";
 import MealsList from "../../components/dashboard/Meals/List";
-import { Meal } from "../../types/meals";
-import fakeMeals from "../../mock-api/meals-api";
 import UIButton from "../../components/commons/ui/Button";
 import useSidePanel from "../../hooks/useSidePanel";
+import { getMeals } from "../../graphql/querier";
+import { Recipes } from "../../types/meals";
 
 type PropsTypes = {
-  meals: Meal[];
+  data: Recipes | undefined;
 };
 
-const Meals: React.FC<PropsTypes> = ({ meals }) => {
+const Meals: React.FC<PropsTypes> = ({ data }) => {
   const { showSidePanel } = useSidePanel();
-
-  console.log(showSidePanel);
   const actions = [
     <UIButton
       color="success"
@@ -24,24 +22,28 @@ const Meals: React.FC<PropsTypes> = ({ meals }) => {
   ];
   return (
     <DashBoardLayout title="Your meals" actions={actions}>
-      <MealsList data={[]} />
+      <MealsList data={data} />
     </DashBoardLayout>
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let data = [];
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<{ props: PropsTypes }> {
+  let data;
 
-  /* 	try {
-		const res = await fetch("/api/meals")
-		data = await res.json()
-	} catch (error) {
-		console.error(error)
-	} */
+  const { req } = context;
+
+  try {
+    const res = await getMeals();
+    data = res;
+  } catch (error) {
+    console.error(error);
+  }
 
   return {
     props: {
-      meals: fakeMeals,
+      data,
     },
   };
 }
