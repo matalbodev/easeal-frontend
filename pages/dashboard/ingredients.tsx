@@ -11,14 +11,13 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import UIPagination from "../../components/commons/ui/Pagination";
 import { DBIngredient } from "../../types/ingredients";
+import { getIngredients } from "../../graphql/querier";
+import { convertedIngredients } from "../../graphql/converter";
 
-const PER_PAGE = 10;
+const PER_PAGE = 30;
 
 type PropsTypes = {
-  ingredients: {
-    data: DBIngredient[];
-    total: number;
-  };
+  data: convertedIngredients;
 };
 
 export type DisplayIngredientsComponentProps = {
@@ -56,21 +55,23 @@ const views: Map<
 
 const Ingredients = (props: PropsTypes) => {
   const router = useRouter();
-  const { ingredients: SSRData } = props;
+  const { data: ingredientsData } = props;
 
   const { data, mutate, isLoading, isError } = useIngredients({
-    data: SSRData.data,
+    data: ingredientsData.ingredients,
     paginate: {
       limit: PER_PAGE,
       page: 0,
-      total: SSRData.total,
+      total: 5,
     },
   });
   const { ingredients, total } = data;
   const [view, setView] = useState("table");
   const keys = Array.from(views.keys());
   const activeView = views.get(view);
-  const DisplayIngredients = activeView?.component;
+  const DisplayIngredients = activeView?.component
+    ? activeView.component
+    : IngredientsListTable;
 
   const deleteIngredient = async (id: string) => {
     try {
@@ -122,17 +123,24 @@ const Ingredients = (props: PropsTypes) => {
           })}
         </div>
       </div>
+
+      <DisplayIngredients
+        data={ingredientsData.ingredients}
+        limit={PER_PAGE}
+        isLoading={false}
+        deleteIngredient={deleteIngredient}
+      />
       {isError && <div>Error...</div>}
       {isLoading ? (
         <div>Loading...</div>
-      ) : DisplayIngredients ? (
+      ) : (
         <DisplayIngredients
           data={ingredients}
           limit={PER_PAGE}
           isLoading={isLoading}
           deleteIngredient={deleteIngredient}
         />
-      ) : null}
+      )}
       <UIPagination total={total} />
       <div className="py-10">
         <p className="mb-6 text-2xl">Add ingredient</p>
@@ -142,24 +150,22 @@ const Ingredients = (props: PropsTypes) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let ingredients = [];
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<{ props: PropsTypes }> {
+  let data: any = [];
   const { page, filter } = context.query;
-
+  const pageInt = parseInt(page as string) || 0;
   try {
-    const res = await fetch(
-      `http://localhost:3001/ingredients?skip=${
-        page ? page : 0
-      }&take=${PER_PAGE}` + (filter ? `&filter=${filter}` : "")
-    );
-    ingredients = await res.json();
+    const req = await getIngredients(PER_PAGE);
+    data = req;
   } catch (error) {
     console.error(error);
   }
 
   return {
     props: {
-      ingredients,
+      data,
     },
   };
 }

@@ -1,26 +1,26 @@
-import { Meal } from '../../../types/meals'
-import MealCard from "./Card"
+import { Fragment } from "react";
+import { Recipes } from "../../../types/meals";
+import MealCard from "./Card";
 type PropsType = {
-	data: Meal[]
-}
+  data: Recipes | undefined;
+};
 const MealsList = (props: PropsType) => {
-	const meals = props.data
-  console.log(meals)
-	return (
-		<div className="flex space-x-4">
-			{meals ? (
-				meals.map((meal) => {
-					return (
-						<div key={meal.id}>
-							<MealCard data={meal} />
-						</div>
-					)
-				})
-			) : (
-				<div>No meals here...</div>
-			)}
-		</div>
-	)
-}
+  const meals = props.data?.recipes;
+  return (
+    <div className="flex space-x-4">
+      {meals ? (
+        meals.map((meal) => {
+          return (
+            <Fragment key={meal.id}>
+              <MealCard data={meal} />
+            </Fragment>
+          );
+        })
+      ) : (
+        <div>No meals here...</div>
+      )}
+    </div>
+  );
+};
 
-export default MealsList
+export default MealsList;

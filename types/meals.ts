@@ -1,10 +1,14 @@
-export type Meal = {
+import { Ingredient } from "./ingredients";
+
+export type Recipe = {
   id: string;
   name: string;
-  ingredients: string[];
+  description: string;
+  ingredients: {
+    ingredient: Ingredient;
+  }[];
 };
 
-export interface DBMeal extends Meal {
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Recipes = {
+  recipes: Recipe[];
+};

@@ -1,12 +1,20 @@
-type MainType = 'carbohydrates'
+import { PaginatedResponse } from "./pagination";
 
 export type Ingredient = {
   id: string;
   name: string;
+  classification: string;
   kcal: number;
-  mainType: MainType;
+  mainType: string;
 };
-export interface DBIngredient extends Ingredient {
-  createdAt: Date;
-  updatedAt: Date;
-}
+
+export type Ingredients = {
+  edges: {
+    cursor: string;
+    node: Ingredient;
+  }[];
+};
+
+export type GetIngredientsPaginated = {
+  ingredients: Ingredients & PaginatedResponse;
+};
