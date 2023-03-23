@@ -1,7 +1,7 @@
 import { GetServerSidePropsContext } from "next";
-import DashBoardLayout from "../../components/dashboard/Layout";
-import Week from "../../components/dashboard/WeekDays/Week";
-import { Meal } from "../../types/meals";
+import DashBoardLayout from "../../src/components/dashboard/Layout";
+import Week from "../../src/components/dashboard/WeekDays/Week";
+import { Meal } from "../../src/types/meals";
 
 type PropsType = {
   meals: Meal[];

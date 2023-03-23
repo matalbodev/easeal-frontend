@@ -1,17 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import fakeMeals from "../../mock-api/meals-api";
-import { Meal } from "../../mock-api/meals-api";
+import { getMeals } from "../../src/graphql/querier";
+import { Recipes } from "../../src/types/meals";
+import { ApiErrorRes } from "../../src/types/api";
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Meal[]>
+  res: NextApiResponse<Recipes | ApiErrorRes>
 ) {
-  /*   let meals: MealType[] = [];
+  let data;
+
   try {
-    const response = await fetch("http://localhost:3001/api/meals");
-    meals = await response.json();
+    const res = await getMeals();
+    data = res;
   } catch (error) {
     console.error(error);
-  } */
-
-  res.status(200).json(fakeMeals);
+  }
+  if (!data) return res.status(404).json({ message: "No meals found" });
+  res.status(200).json(data);
 }

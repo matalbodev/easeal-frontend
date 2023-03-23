@@ -1,3 +1,4 @@
+import { Ingredient } from "../types/ingredients";
 import { GetIngredientsPaginated } from "./querier";
 
 export type convertedIngredients = {
@@ -5,6 +6,7 @@ export type convertedIngredients = {
     id: string;
     name: string;
     kcal: number;
+    classification: string;
     mainType: string;
   }[];
   pagination: {
@@ -16,7 +18,9 @@ export type convertedIngredients = {
 
 export const convertIngredients = (data: GetIngredientsPaginated) => {
   return {
-    ingredients: data.ingredients.edges.map((edge) => edge.node),
+    ingredients: data.ingredients.edges.map(
+      (edge: { node: Ingredient }) => edge.node
+    ),
     pagination: {
       hasNextPage: data.ingredients.pageInfo.hasNextPage,
       hasPreviousPage: data.ingredients.pageInfo.hasPreviousPage,

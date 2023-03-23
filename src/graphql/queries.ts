@@ -8,6 +8,7 @@ export const queries = {
             id
             name
             kcal
+            classification
             mainType
           }
         }
@@ -22,6 +23,7 @@ export const queries = {
   getMeals: `
     query Meals {
       recipes {
+        id
         name
         description
         ingredients {

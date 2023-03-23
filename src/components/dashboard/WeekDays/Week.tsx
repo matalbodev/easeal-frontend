@@ -1,7 +1,6 @@
 import Day from "./Day";
 import dayjs from "dayjs";
 import { useRef } from "react";
-import { Meal } from "../../../types/meals";
 
 type PropsType = {
   meals: Meal[];

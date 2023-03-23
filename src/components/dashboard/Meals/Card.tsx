@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import UIButton from "../../commons/ui/Button";
 import { Recipe } from "../../../types/meals";
 import { Ingredient } from "../../../types/ingredients";

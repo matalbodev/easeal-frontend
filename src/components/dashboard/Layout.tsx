@@ -28,14 +28,7 @@ const DashBoardLayout: NextPage<PropsTypes> = ({
           {actions && (
             <div className="ml-16 flex items-center">
               {actions.map((action, index) => (
-                <Fragment key={index}>
-                  <UIButton
-                    color="success"
-                    action={() => showSidePanel(<div>Test</div>, "add a meal")}
-                  >
-                    Add meal
-                  </UIButton>
-                </Fragment>
+                <Fragment key={index}>{action}</Fragment>
               ))}
             </div>
           )}

@@ -1,7 +1,7 @@
 import { FormEvent } from "react";
 import UIButton from "../../../commons/ui/Button";
 import useSWR from "swr";
-import { fetcher } from "../../../../utils/fetcher";
+import { fetcher } from "../../../../../utils/fetcher";
 import UIInput from "../../../commons/ui/Input";
 
 type PropsTypes = {

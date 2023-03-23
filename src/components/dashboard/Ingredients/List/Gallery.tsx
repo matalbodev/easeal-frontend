@@ -1,4 +1,4 @@
-import { DisplayIngredientsComponentProps } from "../../../../pages/dashboard/ingredients";
+import { DisplayIngredientsComponentProps } from "../../../../../pages/dashboard/ingredients";
 
 const IngredientsListGallery = (props: DisplayIngredientsComponentProps) => {
   const { data: ingredients } = props;
